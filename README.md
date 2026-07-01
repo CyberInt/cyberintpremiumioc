@@ -1,16 +1,16 @@
-# Check Point EM ThreatCloud Intelligence Feed
+# Check Point EM ThreatCloud Intelligence
 
 Publisher: Check Point Cyberint <br>
 Connector Version: 1.0.1 <br>
 Product Vendor: Check Point Cyberint <br>
-Product Name: Check Point EM ThreatCloud Intelligence Feed <br>
+Product Name: Check Point EM ThreatCloud Intelligence <br>
 Minimum Product Version: 6.3.0
 
 Check Point EM ThreatCloud Intelligence Feed integration brings enriched threat intelligence from the Argos Edge™ Digital Risk Protection Platform into Splunk SOAR using the Check Point EM ThreatCloud Intelligence Feed Enrichment and Feed APIs, enabling automated playbooks and incident workflows on intelligence IOC data.
 
 ### Configuration variables
 
-This table lists the configuration variables required to operate Check Point EM ThreatCloud Intelligence Feed. These variables are specified when configuring a Check Point EM ThreatCloud Intelligence Feed asset in Splunk SOAR.
+This table lists the configuration variables required to operate Check Point EM ThreatCloud Intelligence. These variables are specified when configuring a Check Point EM ThreatCloud Intelligence Feed asset in Splunk SOAR.
 
 VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------

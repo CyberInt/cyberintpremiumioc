@@ -1,18 +1,18 @@
 {
-    "appid": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
-    "name": "Check Point EM ThreatCloud Intelligence Feed",
-    "description": "Check Point EM ThreatCloud Intelligence Feed integration brings enriched threat intelligence from the Argos Edge\u2122 Digital Risk Protection Platform into Splunk SOAR using the Check Point EM ThreatCloud Intelligence Feed Enrichment and Feed APIs, enabling automated playbooks and incident workflows on intelligence IOC data.",
+    "appid": "f1351a77-3d1f-4e1e-af9c-7cddb9bec48b",
+    "name": "Check Point EM ThreatCloud Intelligence",
+    "description": "Check Point EM ThreatCloud Intelligence integration brings enriched threat intelligence from the Argos Edge\u2122 Digital Risk Protection Platform into Splunk SOAR using the Check Point EM ThreatCloud Intelligence Feed Enrichment and Feed APIs, enabling automated playbooks and incident workflows on intelligence IOC data.",
     "type": "endpoint",
     "product_vendor": "Check Point Cyberint",
     "logo": "logo.svg",
     "logo_dark": "logo_dark.svg",
-    "product_name": "Check Point EM ThreatCloud Intelligence Feed",
+    "product_name": "Check Point EM ThreatCloud Intelligence",
     "product_version_regex": ".*",
     "publisher": "Check Point Cyberint",
     "license": "Copyright (c) Check Point Cyberint, 2025-2026",
     "app_version": "1.0.1",
     "latest_tested_versions": [
-        "Version X.Y.Z, Month Year"
+        "Version 7.1.0.225, July 2026"
     ],
     "utctime_updated": "2025-08-01T20:30:47.300351Z",
     "package_name": "phantom_cyberintpremiumioc",

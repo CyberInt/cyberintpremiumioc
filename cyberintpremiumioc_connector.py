@@ -34,7 +34,7 @@ from cyberintpremiumioc_consts import (
 
 class CyberintpremiumiocConnector(BaseConnector):
     """
-    Check Point EM ThreatCloud Intelligence Feed connector.
+    Check Point EM ThreatCloud Intelligence connector.
     """
 
     def __init__(self):
