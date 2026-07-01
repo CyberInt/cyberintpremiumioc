@@ -1,2 +1,2 @@
 **Unreleased**
-* Cyberint Intelligence initial release
+* Check Point EM ThreatCloud Intelligence Feed initial release

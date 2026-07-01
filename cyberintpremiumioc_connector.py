@@ -34,7 +34,7 @@ from cyberintpremiumioc_consts import (
 
 class CyberintpremiumiocConnector(BaseConnector):
     """
-    Cyberint Intelligence IoC connector.
+    Check Point EM ThreatCloud Intelligence Feed connector.
     """
 
     def __init__(self):
@@ -59,7 +59,7 @@ class CyberintpremiumiocConnector(BaseConnector):
     def _make_rest_call(self, endpoint, action_result, headers=None, params=None, data=None, json=None, method="get"):
         """
         Helper function to make REST calls for the connector. Authenticates via the
-        `access_token` cookie as required by the Cyberint Premium APIs.
+        `access_token` cookie as required by the Check Point EM ThreatCloud APIs.
         """
         try:
             url = f"{self._base_url}{endpoint}"
@@ -188,7 +188,7 @@ class CyberintpremiumiocConnector(BaseConnector):
         today_str = today.strftime("%Y-%m-%d")
 
         container = {
-            "name": f"Cyberint Premium Daily IOC Feed - {today_str}",
+            "name": f"Check Point EM ThreatCloud Daily IOC Feed - {today_str}",
             "source_data_identifier": f"cyberint_premium_ioc_feed_{today_str}",
         }
         status, message, container_id = self.save_container(container)
