@@ -1,2 +1,2 @@
 **Unreleased**
-* Check Point EM ThreatCloud Intelligence Feed initial release
+* Check Point EM ThreatCloud Intelligence initial release

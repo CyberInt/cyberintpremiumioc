@@ -6,7 +6,7 @@ Product Vendor: Check Point Cyberint <br>
 Product Name: Check Point EM ThreatCloud Intelligence <br>
 Minimum Product Version: 6.3.0
 
-Check Point EM ThreatCloud Intelligence integration brings enriched threat intelligence from the Argos Edge™ Digital Risk Protection Platform into Splunk SOAR using the Check Point EM ThreatCloud Intelligence Feed Enrichment and Feed APIs, enabling automated playbooks and incident workflows on intelligence IOC data.
+Check Point EM ThreatCloud Intelligence integration brings enriched threat intelligence from the Argos Edge™ Digital Risk Protection Platform into Splunk SOAR using the Check Point EM ThreatCloud Intelligence Enrichment and Feed APIs, enabling automated playbooks and incident workflows on intelligence IOC data.
 
 ### Configuration variables
 

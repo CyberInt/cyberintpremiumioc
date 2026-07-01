@@ -1,7 +1,7 @@
 {
     "appid": "f1351a77-3d1f-4e1e-af9c-7cddb9bec48b",
     "name": "Check Point EM ThreatCloud Intelligence",
-    "description": "Check Point EM ThreatCloud Intelligence integration brings enriched threat intelligence from the Argos Edge\u2122 Digital Risk Protection Platform into Splunk SOAR using the Check Point EM ThreatCloud Intelligence Feed Enrichment and Feed APIs, enabling automated playbooks and incident workflows on intelligence IOC data.",
+    "description": "Check Point EM ThreatCloud Intelligence integration brings enriched threat intelligence from the Argos Edge\u2122 Digital Risk Protection Platform into Splunk SOAR using the Check Point EM ThreatCloud Intelligence Enrichment and Feed APIs, enabling automated playbooks and incident workflows on intelligence IOC data.",
     "type": "endpoint",
     "product_vendor": "Check Point Cyberint",
     "logo": "logo.svg",
