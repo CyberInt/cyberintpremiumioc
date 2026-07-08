@@ -25,3 +25,12 @@ IOC_TYPE_SHA256 = "sha256"
 IOC_TYPE_IPV4 = "ipv4"
 IOC_TYPE_URL = "url"
 IOC_TYPE_DOMAIN = "domain"
+
+# On-poll feed ingestion
+# State-file key holding the ISO-8601 timestamp of the last successful ingestion,
+# used as the "added_to_feed_after" cursor on the next scheduled poll.
+FEED_STATE_CURSOR_KEY = "last_ingested_time"
+# How far back to look on the very first scheduled poll (no checkpoint yet).
+FEED_FIRST_FETCH_DAYS = 3
+# Lookback window for a manual "poll now" run (does not advance the checkpoint).
+POLL_NOW_LOOKBACK_DAYS = 1

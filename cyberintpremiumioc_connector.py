@@ -14,7 +14,7 @@
 # and limitations under the License.
 
 import json
-from datetime import datetime, time, timezone
+from datetime import datetime, timedelta, timezone
 
 import phantom.app as phantom
 import requests
@@ -22,6 +22,8 @@ from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
 
 from cyberintpremiumioc_consts import (
+    FEED_FIRST_FETCH_DAYS,
+    FEED_STATE_CURSOR_KEY,
     IOC_ENRICHMENT_ENDPOINT,
     IOC_FEED_JSONL_ENDPOINT,
     IOC_FEED_PAGE_SIZE,
@@ -29,6 +31,7 @@ from cyberintpremiumioc_consts import (
     IOC_TYPE_IPV4,
     IOC_TYPE_SHA256,
     IOC_TYPE_URL,
+    POLL_NOW_LOOKBACK_DAYS,
 )
 
 
@@ -182,41 +185,76 @@ class CyberintpremiumiocConnector(BaseConnector):
         action_result.add_data(response)
         return action_result.set_status(phantom.APP_SUCCESS)
 
-    def _handle_on_poll(self, param):
-        action_result = self.add_action_result(ActionResult(dict(param)))
-        today = datetime.now(timezone.utc).date()
-        today_str = today.strftime("%Y-%m-%d")
+    def _find_container_id(self, sdi):
+        """Look up an existing container id by its source_data_identifier."""
+        url = f"{self.get_phantom_base_url()}/rest/container?_filter_source_data_identifier='{sdi}'"
+        try:
+            r = self._get_requests_session().get(url, verify=False)
+            r.raise_for_status()
+            data = r.json()
+            if data.get("count", 0) > 0:
+                return data["data"][0]["id"]
+        except Exception as e:
+            self.debug_print(f"Failed to look up container for '{sdi}': {e}")
+        return None
 
+    def _get_daily_container(self, date_str, cache):
+        """
+        Return the container id for a given UTC day, creating it if needed.
+        Container ids are cached per-run so IOCs spanning multiple days each land
+        in the correct daily container without redundant lookups.
+        """
+        if date_str in cache:
+            return cache[date_str]
+
+        sdi = f"cyberint_premium_ioc_feed_{date_str}"
         container = {
-            "name": f"Check Point EM ThreatCloud Daily IOC Feed - {today_str}",
-            "source_data_identifier": f"cyberint_premium_ioc_feed_{today_str}",
+            "name": f"Check Point EM ThreatCloud Daily IOC Feed - {date_str}",
+            "source_data_identifier": sdi,
         }
         status, message, container_id = self.save_container(container)
         if phantom.is_fail(status):
             self.debug_print(f"Could not create container (likely already exists): {message}")
-
         if not container_id:
-            sdi = f"cyberint_premium_ioc_feed_{today_str}"
-            url = f"{self.get_phantom_base_url()}/rest/container?_filter_source_data_identifier='{sdi}'"
-            try:
-                r = self._get_requests_session().get(url, verify=False)
-                r.raise_for_status()
-                data = r.json()
-                if data.get("count", 0) > 0:
-                    container_id = data["data"][0]["id"]
-                else:
-                    return action_result.set_status(
-                        phantom.APP_ERROR,
-                        "Failed to create or find container for IOC feed",
-                    )
-            except Exception as e:
-                return action_result.set_status(
-                    phantom.APP_ERROR,
-                    f"Failed to create or find container for IOC feed: {e}",
-                )
+            container_id = self._find_container_id(sdi)
 
-        added_after = datetime.combine(today, time.min, tzinfo=timezone.utc).isoformat()
-        added_before = datetime.combine(today, time.max, tzinfo=timezone.utc).isoformat()
+        cache[date_str] = container_id
+        return container_id
+
+    @staticmethod
+    def _ioc_feed_date(ioc, default_date_str):
+        """Return the UTC date (yyyy-MM-dd) an IOC was added to the feed."""
+        ts = ioc.get("added_to_feed")
+        if not ts:
+            return default_date_str
+        try:
+            parsed = datetime.fromisoformat(str(ts).replace("Z", "+00:00"))
+            return parsed.astimezone(timezone.utc).strftime("%Y-%m-%d")
+        except ValueError:
+            return default_date_str
+
+    def _handle_on_poll(self, param):
+        action_result = self.add_action_result(ActionResult(dict(param)))
+
+        now = datetime.now(timezone.utc)
+        added_before = now.isoformat()
+
+        # Determine the ingestion window start. Scheduled polls resume from the
+        # checkpoint saved in the state file; a manual "poll now" uses a fixed
+        # lookback and never advances the checkpoint.
+        poll_now = self.is_poll_now()
+        if poll_now:
+            added_after = (now - timedelta(days=POLL_NOW_LOOKBACK_DAYS)).isoformat()
+            self.save_progress(f"POLL NOW: ingesting the last {POLL_NOW_LOOKBACK_DAYS} day(s); checkpoint will not advance")
+        elif self._state.get(FEED_STATE_CURSOR_KEY):
+            added_after = self._state[FEED_STATE_CURSOR_KEY]
+            self.save_progress(f"Resuming ingestion from checkpoint: {added_after}")
+        else:
+            added_after = (now - timedelta(days=FEED_FIRST_FETCH_DAYS)).isoformat()
+            self.save_progress(f"First run: ingesting the last {FEED_FIRST_FETCH_DAYS} days")
+
+        container_cache = {}
+        default_date_str = now.strftime("%Y-%m-%d")
 
         offset = 0
         limit = IOC_FEED_PAGE_SIZE
@@ -229,7 +267,7 @@ class CyberintpremiumiocConnector(BaseConnector):
                     "added_to_feed_before": added_before,
                 },
                 "pagination": {"limit": limit, "offset": offset},
-                "sort": {"field": "added_to_feed", "direction": "desc"},
+                "sort": {"field": "added_to_feed", "direction": "asc"},
             }
             ret_val, iocs = self._make_rest_call(IOC_FEED_JSONL_ENDPOINT, action_result, json=body, method="post")
             if phantom.is_fail(ret_val):
@@ -239,6 +277,11 @@ class CyberintpremiumiocConnector(BaseConnector):
                 break
 
             for ioc in iocs:
+                date_str = self._ioc_feed_date(ioc, default_date_str)
+                container_id = self._get_daily_container(date_str, container_cache)
+                if not container_id:
+                    return action_result.set_status(phantom.APP_ERROR, "Failed to create or find container for IOC feed")
+
                 indicator_type = ioc.get("indicator_type")
                 indicator_value = ioc.get("indicator_value")
                 activity = ioc.get("activity", "")
@@ -254,6 +297,10 @@ class CyberintpremiumiocConnector(BaseConnector):
             if len(iocs) < limit:
                 break
             offset += limit
+
+        # Advance the checkpoint only after a full successful scheduled pass.
+        if not poll_now:
+            self._state[FEED_STATE_CURSOR_KEY] = added_before
 
         action_result.update_summary({"iocs_ingested": total_iocs})
         return action_result.set_status(phantom.APP_SUCCESS)

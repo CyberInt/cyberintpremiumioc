@@ -12,6 +12,7 @@
 # the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
 # either express or implied. See the License for the specific language governing permissions
 # and limitations under the License.
+import json
 from datetime import datetime, time, timezone
 
 import phantom.app as phantom
@@ -22,95 +23,55 @@ from cyberintpremiumioc_connector import CyberintpremiumiocConnector
 from cyberintpremiumioc_consts import IOC_FEED_JSONL_ENDPOINT, IOC_FEED_PAGE_SIZE
 
 
-def _render_enrichment_view(request, connector, handler, param, template_name, indicator_type, indicator_value):
-    action_result = connector.add_action_result(phantom.action_result.ActionResult(dict(param)))
-    result = handler(param)
-    if phantom.is_fail(result):
-        return HttpResponse(
-            f"Failed to enrich {indicator_type}: {action_result.get_message()}",
-            status=500,
-        )
+def _enrichment_view(all_app_runs, context, template, param_key):
+    """
+    Render the results of an already-run enrichment action.
 
-    template = loader.get_template(template_name)
-    context = {
-        "data": action_result.get_data(),
-        "indicator_type": indicator_type,
-        "indicator_value": indicator_value,
-    }
-    return HttpResponse(template.render(context, request))
-
-
-def enrich_sha256_view(request, **kwargs):
-    connector = CyberintpremiumiocConnector()
-    connector.handle_action = lambda x: x
-    connector.initialize()
-    hash_value = request.GET.get("hash")
-    param = {"Hash": hash_value}
-    return _render_enrichment_view(
-        request,
-        connector,
-        connector._handle_enrich_sha256,
-        param,
-        "enrich_sha256_view.html",
-        "SHA256",
-        hash_value,
-    )
+    Custom views do not run actions; SOAR passes the results of the action that
+    has already executed via ``all_app_runs``. Each app run is a
+    ``(summary, action_results)`` tuple, and every ``ActionResult`` exposes the
+    action parameters (``get_param``) and the data the connector attached
+    (``get_data``). We flatten those into ``context["results"]`` for the template.
+    """
+    context["results"] = results = []
+    for _summary, action_results in all_app_runs:
+        for result in action_results:
+            param = result.get_param()
+            data = result.get_data()
+            enrichment = data[0] if data else {}
+            results.append(
+                {
+                    "indicator_value": param.get(param_key, ""),
+                    "data": enrichment,
+                    "data_json": json.dumps(enrichment, indent=2, sort_keys=True) if enrichment else "",
+                }
+            )
+    return template
 
 
-def enrich_ipv4_view(request, **kwargs):
-    connector = CyberintpremiumiocConnector()
-    connector.handle_action = lambda x: x
-    connector.initialize()
-    ip_value = request.GET.get("ip")
-    param = {"IP": ip_value}
-    return _render_enrichment_view(
-        request,
-        connector,
-        connector._handle_enrich_ipv4,
-        param,
-        "enrich_ipv4_view.html",
-        "IPv4",
-        ip_value,
-    )
+def enrich_sha256_view(provides, all_app_runs, context):
+    return _enrichment_view(all_app_runs, context, "enrich_sha256_view.html", "Hash")
 
 
-def enrich_url_view(request, **kwargs):
-    connector = CyberintpremiumiocConnector()
-    connector.handle_action = lambda x: x
-    connector.initialize()
-    url_value = request.GET.get("url")
-    param = {"URL": url_value}
-    return _render_enrichment_view(
-        request,
-        connector,
-        connector._handle_enrich_url,
-        param,
-        "enrich_url_view.html",
-        "URL",
-        url_value,
-    )
+def enrich_ipv4_view(provides, all_app_runs, context):
+    return _enrichment_view(all_app_runs, context, "enrich_ipv4_view.html", "IP")
 
 
-def enrich_domain_view(request, **kwargs):
-    connector = CyberintpremiumiocConnector()
-    connector.handle_action = lambda x: x
-    connector.initialize()
-    domain_value = request.GET.get("domain")
-    param = {"Domain": domain_value}
-    return _render_enrichment_view(
-        request,
-        connector,
-        connector._handle_enrich_domain,
-        param,
-        "enrich_domain_view.html",
-        "Domain",
-        domain_value,
-    )
+def enrich_url_view(provides, all_app_runs, context):
+    return _enrichment_view(all_app_runs, context, "enrich_url_view.html", "URL")
+
+
+def enrich_domain_view(provides, all_app_runs, context):
+    return _enrichment_view(all_app_runs, context, "enrich_domain_view.html", "Domain")
 
 
 def ioc_view(request, **kwargs):
     """
-    This view function will be called by Splunk SOAR to display the daily IOC feed.
+    Standalone dashboard component that paginates the daily IOC feed on demand.
+
+    Unlike the action-result views above, this is a custom REST/dashboard view
+    (wired via default/data/ui) and therefore receives an HTTP request and
+    queries the feed API directly.
     """
     connector = CyberintpremiumiocConnector()
     connector.handle_action = lambda x: x
@@ -150,52 +111,3 @@ def ioc_view(request, **kwargs):
         "date": today_str,
     }
     return HttpResponse(template.render(context, request))
-
-
-def enrich_indicator_view(request, **kwargs):
-    """
-    This view function will be called by Splunk SOAR to enrich an indicator.
-    This can act as a generic dispatcher if needed, but specific views are better.
-    """
-    connector = CyberintpremiumiocConnector()
-    connector.handle_action = lambda x: x
-    connector.initialize()
-
-    indicator_type = request.GET.get("type")
-    indicator_value = request.GET.get("value")
-
-    if not indicator_type or not indicator_value:
-        return HttpResponse("Missing indicator type or value.", status=400)
-
-    param = {}
-    handler = None
-    template_name = ""
-
-    if indicator_type == "sha256":
-        param = {"Hash": indicator_value}
-        handler = connector._handle_enrich_sha256
-        template_name = "enrich_sha256_view.html"
-    elif indicator_type == "ipv4":
-        param = {"IP": indicator_value}
-        handler = connector._handle_enrich_ipv4
-        template_name = "enrich_ipv4_view.html"
-    elif indicator_type == "url":
-        param = {"URL": indicator_value}
-        handler = connector._handle_enrich_url
-        template_name = "enrich_url_view.html"
-    elif indicator_type == "domain":
-        param = {"Domain": indicator_value}
-        handler = connector._handle_enrich_domain
-        template_name = "enrich_domain_view.html"
-    else:
-        return HttpResponse(f"Unsupported indicator type: {indicator_type}", status=400)
-
-    return _render_enrichment_view(
-        request,
-        connector,
-        handler,
-        param,
-        template_name,
-        indicator_type,
-        indicator_value,
-    )
