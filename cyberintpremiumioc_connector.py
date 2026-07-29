@@ -46,7 +46,7 @@ class CyberintpremiumiocConnector(BaseConnector):
         self._base_url = None
         self._access_token = None
         self._customer_name = None
-        self._verify = False
+        self._verify = True
 
     def _get_custom_headers(self):
         app_json = self.get_app_json()
@@ -91,8 +91,6 @@ class CyberintpremiumiocConnector(BaseConnector):
 
             if hasattr(action_result, "add_debug_data"):
                 action_result.add_debug_data({"r_status_code": response.status_code})
-                action_result.add_debug_data({"r_text": response.text})
-                action_result.add_debug_data({"r_headers": response.headers})
 
             if 200 <= response.status_code < 300:
                 content_type = response.headers.get("Content-Type", "")
@@ -316,7 +314,7 @@ class CyberintpremiumiocConnector(BaseConnector):
         self._base_url = config.get("base_url")
         self._access_token = config.get("access_token")
         self._customer_name = config.get("customer_name")
-        self._verify = config.get("verify_server_cert", False)
+        self._verify = config.get("verify_server_cert", True)
 
         return phantom.APP_SUCCESS
 

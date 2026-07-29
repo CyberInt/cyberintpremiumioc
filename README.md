@@ -17,6 +17,7 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 **base_url** | required | string | Base URL of the Cyberint API |
 **access_token** | required | password | API Access Token for authentication |
 **customer_name** | required | string | The name of the company |
+**verify_server_cert** | optional | boolean | Verify server certificate |
 
 ### Supported Actions
 

@@ -43,6 +43,14 @@
             "required": true,
             "order": 2,
             "name": "Company Name"
+        },
+        "verify_server_cert": {
+            "description": "Verify server certificate",
+            "data_type": "boolean",
+            "required": false,
+            "default": true,
+            "order": 3,
+            "name": "Verify Server Certificate"
         }
     },
     "actions": [
