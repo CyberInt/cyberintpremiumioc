@@ -54,13 +54,38 @@ Read only: **True**
 
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**Hash** | required | SHA256 hash to enrich | string | |
+**Hash** | required | SHA256 hash to enrich | string | `hash` `sha256` |
 
 #### Action Output
 
 DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
 --------- | ---- | -------- | --------------
-action_result.parameter.Hash | string | | |
+action_result.parameter.Hash | string | `hash` `sha256` | |
+action_result.data.\*.indicator_type | string | | |
+action_result.data.\*.indicator_value | string | | |
+action_result.data.\*.malicious | string | | |
+action_result.data.\*.confidence | numeric | | |
+action_result.data.\*.severity | numeric | | |
+action_result.data.\*.activity | string | | |
+action_result.data.\*.kill_chain_stage | string | | |
+action_result.data.\*.malware_family | string | | |
+action_result.data.\*.malware_types.\* | string | | |
+action_result.data.\*.first_seen | string | | |
+action_result.data.\*.last_seen | string | | |
+action_result.data.\*.valid_until | string | | |
+action_result.data.\*.source | string | | |
+action_result.data.\*.direct_link | string | `url` | |
+action_result.data.\*.threat_actors.\* | string | | |
+action_result.data.\*.campaigns.\* | string | | |
+action_result.data.\*.cves.\* | string | | |
+action_result.data.\*.ttps.\* | string | | |
+action_result.data.\*.tags.\* | string | | |
+action_result.data.\*.origin_countries.\* | string | | |
+action_result.data.\*.targeted_countries.\* | string | | |
+action_result.data.\*.targeted_sectors.\* | string | | |
+action_result.data.\*.targeted_brands.\* | string | | |
+action_result.data.\*.enrichment.filenames.\* | string | `file name` | |
+action_result.data.\*.enrichment.download_urls.\* | string | `url` | |
 summary.total_objects | numeric | | |
 action_result.status | string | | |
 action_result.message | string | | |
@@ -77,13 +102,40 @@ Read only: **True**
 
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**IP** | required | IPv4 address to enrich | string | |
+**IP** | required | IPv4 address to enrich | string | `ip` |
 
 #### Action Output
 
 DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
 --------- | ---- | -------- | --------------
-action_result.parameter.IP | string | | |
+action_result.parameter.IP | string | `ip` | |
+action_result.data.\*.indicator_type | string | | |
+action_result.data.\*.indicator_value | string | | |
+action_result.data.\*.malicious | string | | |
+action_result.data.\*.confidence | numeric | | |
+action_result.data.\*.severity | numeric | | |
+action_result.data.\*.activity | string | | |
+action_result.data.\*.kill_chain_stage | string | | |
+action_result.data.\*.malware_family | string | | |
+action_result.data.\*.malware_types.\* | string | | |
+action_result.data.\*.first_seen | string | | |
+action_result.data.\*.last_seen | string | | |
+action_result.data.\*.valid_until | string | | |
+action_result.data.\*.source | string | | |
+action_result.data.\*.direct_link | string | `url` | |
+action_result.data.\*.threat_actors.\* | string | | |
+action_result.data.\*.campaigns.\* | string | | |
+action_result.data.\*.cves.\* | string | | |
+action_result.data.\*.ttps.\* | string | | |
+action_result.data.\*.tags.\* | string | | |
+action_result.data.\*.origin_countries.\* | string | | |
+action_result.data.\*.targeted_countries.\* | string | | |
+action_result.data.\*.targeted_sectors.\* | string | | |
+action_result.data.\*.targeted_brands.\* | string | | |
+action_result.data.\*.enrichment.geo.country | string | | |
+action_result.data.\*.enrichment.geo.city | string | | |
+action_result.data.\*.enrichment.asn.number | numeric | | |
+action_result.data.\*.enrichment.asn.organization | string | | |
 summary.total_objects | numeric | | |
 action_result.status | string | | |
 action_result.message | string | | |
@@ -100,13 +152,47 @@ Read only: **True**
 
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**URL** | required | URL to enrich | string | |
+**URL** | required | URL to enrich | string | `url` |
 
 #### Action Output
 
 DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
 --------- | ---- | -------- | --------------
-action_result.parameter.URL | string | | |
+action_result.parameter.URL | string | `url` | |
+action_result.data.\*.indicator_type | string | | |
+action_result.data.\*.indicator_value | string | | |
+action_result.data.\*.malicious | string | | |
+action_result.data.\*.confidence | numeric | | |
+action_result.data.\*.severity | numeric | | |
+action_result.data.\*.activity | string | | |
+action_result.data.\*.kill_chain_stage | string | | |
+action_result.data.\*.malware_family | string | | |
+action_result.data.\*.malware_types.\* | string | | |
+action_result.data.\*.first_seen | string | | |
+action_result.data.\*.last_seen | string | | |
+action_result.data.\*.valid_until | string | | |
+action_result.data.\*.source | string | | |
+action_result.data.\*.direct_link | string | `url` | |
+action_result.data.\*.threat_actors.\* | string | | |
+action_result.data.\*.campaigns.\* | string | | |
+action_result.data.\*.cves.\* | string | | |
+action_result.data.\*.ttps.\* | string | | |
+action_result.data.\*.tags.\* | string | | |
+action_result.data.\*.origin_countries.\* | string | | |
+action_result.data.\*.targeted_countries.\* | string | | |
+action_result.data.\*.targeted_sectors.\* | string | | |
+action_result.data.\*.targeted_brands.\* | string | | |
+action_result.data.\*.enrichment.ips.\* | string | `ip` | |
+action_result.data.\*.enrichment.hostname | string | `host name` | |
+action_result.data.\*.enrichment.domain | string | `domain` | |
+action_result.data.\*.enrichment.whois.registrar_name | string | | |
+action_result.data.\*.enrichment.whois.created_date | string | | |
+action_result.data.\*.enrichment.whois.updated_date | string | | |
+action_result.data.\*.enrichment.whois.expiration_date | string | | |
+action_result.data.\*.enrichment.whois.registrant_name | string | | |
+action_result.data.\*.enrichment.whois.registrant_email | string | `email` | |
+action_result.data.\*.enrichment.whois.registrant_country | string | | |
+action_result.data.\*.enrichment.whois.registrant_organization | string | | |
 summary.total_objects | numeric | | |
 action_result.status | string | | |
 action_result.message | string | | |
@@ -123,13 +209,45 @@ Read only: **True**
 
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**Domain** | required | Domain to enrich | string | |
+**Domain** | required | Domain to enrich | string | `domain` |
 
 #### Action Output
 
 DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
 --------- | ---- | -------- | --------------
-action_result.parameter.Domain | string | | |
+action_result.parameter.Domain | string | `domain` | |
+action_result.data.\*.indicator_type | string | | |
+action_result.data.\*.indicator_value | string | | |
+action_result.data.\*.malicious | string | | |
+action_result.data.\*.confidence | numeric | | |
+action_result.data.\*.severity | numeric | | |
+action_result.data.\*.activity | string | | |
+action_result.data.\*.kill_chain_stage | string | | |
+action_result.data.\*.malware_family | string | | |
+action_result.data.\*.malware_types.\* | string | | |
+action_result.data.\*.first_seen | string | | |
+action_result.data.\*.last_seen | string | | |
+action_result.data.\*.valid_until | string | | |
+action_result.data.\*.source | string | | |
+action_result.data.\*.direct_link | string | `url` | |
+action_result.data.\*.threat_actors.\* | string | | |
+action_result.data.\*.campaigns.\* | string | | |
+action_result.data.\*.cves.\* | string | | |
+action_result.data.\*.ttps.\* | string | | |
+action_result.data.\*.tags.\* | string | | |
+action_result.data.\*.origin_countries.\* | string | | |
+action_result.data.\*.targeted_countries.\* | string | | |
+action_result.data.\*.targeted_sectors.\* | string | | |
+action_result.data.\*.targeted_brands.\* | string | | |
+action_result.data.\*.enrichment.ips.\* | string | `ip` | |
+action_result.data.\*.enrichment.whois.registrar_name | string | | |
+action_result.data.\*.enrichment.whois.created_date | string | | |
+action_result.data.\*.enrichment.whois.updated_date | string | | |
+action_result.data.\*.enrichment.whois.expiration_date | string | | |
+action_result.data.\*.enrichment.whois.registrant_name | string | | |
+action_result.data.\*.enrichment.whois.registrant_email | string | `email` | |
+action_result.data.\*.enrichment.whois.registrant_country | string | | |
+action_result.data.\*.enrichment.whois.registrant_organization | string | | |
 summary.total_objects | numeric | | |
 action_result.status | string | | |
 action_result.message | string | | |
@@ -144,11 +262,26 @@ Read only: **True**
 
 #### Action Parameters
 
-No parameters are required for this action
+PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
+--------- | -------- | ----------- | ---- | --------
+**start_time** | optional | Parameter ignored in this app | numeric | |
+**end_time** | optional | Parameter ignored in this app | numeric | |
+**container_id** | optional | Parameter ignored in this app | string | |
+**container_count** | optional | Maximum number of daily feed containers to ingest in one run | numeric | |
+**artifact_count** | optional | Maximum number of IOC artifacts to ingest in one run | numeric | |
 
 #### Action Output
 
-No Output
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string | | |
+action_result.message | string | | |
+action_result.summary.iocs_ingested | numeric | | |
+action_result.summary.iocs_skipped | numeric | | |
+action_result.summary.containers_created | numeric | | |
+action_result.summary.limit_reached | boolean | | |
+summary.total_objects | numeric | | |
+summary.total_objects_successful | numeric | | |
 
 ______________________________________________________________________
 
