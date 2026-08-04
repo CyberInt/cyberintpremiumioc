@@ -1,7 +1,7 @@
 # Check Point EM ThreatCloud Intelligence
 
 Publisher: Check Point Cyberint <br>
-Connector Version: 1.0.1 <br>
+Connector Version: 1.0.0 <br>
 Product Vendor: Check Point Cyberint <br>
 Product Name: Check Point EM ThreatCloud Intelligence <br>
 Minimum Product Version: 6.3.0

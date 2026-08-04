@@ -10,11 +10,11 @@
     "product_version_regex": ".*",
     "publisher": "Check Point Cyberint",
     "license": "Copyright (c) Check Point Cyberint, 2025-2026",
-    "app_version": "1.0.1",
+    "app_version": "1.0.0",
     "latest_tested_versions": [
         "Version 7.1.0.225, July 2026"
     ],
-    "utctime_updated": "2025-08-01T20:30:47.300351Z",
+    "utctime_updated": "2026-08-04T14:26:46.427885Z",
     "package_name": "phantom_cyberintpremiumioc",
     "main_module": "cyberintpremiumioc_connector.py",
     "app_config_render": "default",
