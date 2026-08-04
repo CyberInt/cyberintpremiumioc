@@ -1,8 +1,8 @@
 # Check Point EM ThreatCloud Intelligence
 
-Publisher: Check Point Cyberint <br>
+Publisher: Check Point <br>
 Connector Version: 1.0.1 <br>
-Product Vendor: Check Point Cyberint <br>
+Product Vendor: Check Point <br>
 Product Name: Check Point EM ThreatCloud Intelligence <br>
 Minimum Product Version: 6.3.0
 
@@ -12,12 +12,12 @@ Check Point EM ThreatCloud Intelligence integration brings enriched threat intel
 
 This table lists the configuration variables required to operate Check Point EM ThreatCloud Intelligence. These variables are specified when configuring a Check Point EM ThreatCloud Intelligence asset in Splunk SOAR.
 
-VARIABLE | REQUIRED | TYPE | DESCRIPTION
--------- | -------- | ---- | -----------
-**base_url** | required | string | Base URL of the Cyberint API |
-**access_token** | required | password | API Access Token for authentication |
-**customer_name** | required | string | The name of the company |
-**verify_server_cert** | optional | boolean | Verify server certificate |
+VARIABLE | REQUIRED | TYPE | DESCRIPTION                                         
+-------- | -------- | ---- |-----------------------------------------------------
+**base_url** | required | string | Base URL of the Check Point Exposure Management API |
+**access_token** | required | password | API Access Token for authentication                 |
+**customer_name** | required | string | The name of the company                             |
+**verify_server_cert** | optional | boolean | Verify server certificate                           |
 
 ### Supported Actions
 
